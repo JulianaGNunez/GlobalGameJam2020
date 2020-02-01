@@ -19,7 +19,7 @@ public class PipeManager : MonoBehaviour
     public List<Vector2> randomPositions;
 
     float bufferInput = 0;
-    float bufferInput_max = 0.1f;
+    float bufferInput_max = 0.2f;
 
     Vector2 selectedTile_pos = new Vector2();
 
@@ -36,8 +36,10 @@ public class PipeManager : MonoBehaviour
 
     [Header("Bordas da tela")]
     public Sprite bdTl_left_up;
+    public Sprite bdTl_up_outer;
     public Sprite bdTl_up;
     public Sprite bdTl_up_right;
+    public Sprite bdTl_up_right_outer;
     public Sprite bdTl_right;
     public Sprite bdTl_right_down;
     public Sprite bdTl_down;
@@ -106,7 +108,8 @@ public class PipeManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown("k")){
+        if (Input.GetKeyDown("k"))
+        {
             CallEnterWater(Pipe.PipeDirections.Down);
         }
 
@@ -118,20 +121,42 @@ public class PipeManager : MonoBehaviour
 
         matriz = new GameObject[gridSizeX, gridSizeY];
 
+        //Camera.main.transform.position = new Vector3(gridSizeX*100,);
+
         int objectsLeft = gridSizeX * gridSizeY;
         GameObject pipeObject;
+
+        var posIni = new Vector3(-100, (gridSizeY - 1) * 100);
+        var posFim = new Vector3(gridSizeX * 100, 0);
+
         for (int i = 0; i < gridSizeX; ++i)
         {
             for (int j = 0; j < gridSizeY; ++j)
             {
                 randomPositions.Add(new Vector2(i, j));
-
+                var tempPos = new Vector3(i * 100, j * 100, 0);
                 // Deveria estar lá embaixo
                 if (true)
                 {
-                    pipeObject = Instantiate(pipePrefab[Random.Range(0, pipePrefab.Length)]);
+                    if ((tempPos == posIni + new Vector3(+100, 0, 0)
+                    ||  tempPos == posIni + new Vector3(+200, 0, 0)
+                    ||  tempPos == posIni + new Vector3(+100, -100, 0)
+                    ||  tempPos == posIni + new Vector3(+200, -100, 0)) 
+                    || (tempPos == posFim + new Vector3(-100, 0, 0)
+                    ||  tempPos == posFim + new Vector3(-200, 0, 0)
+                    ||  tempPos == posFim + new Vector3(-100, +100, 0)
+                    ||  tempPos == posFim + new Vector3(-200, +100, 0)
+                    )
+                    )
+                    {
+                        pipeObject = Instantiate(pipePrefab[Random.Range(1, pipePrefab.Length)]);
+                    }
+                    else
+                    {
+                        pipeObject = Instantiate(pipePrefab[Random.Range(0, pipePrefab.Length)]);
+                    }
                     pipeObject.transform.SetParent(matrizObjectsHolder.transform);
-                    pipeObject.transform.localPosition = new Vector3(i * 100, j * 100, 0);
+                    pipeObject.transform.localPosition = tempPos;
                     matriz[i, j] = pipeObject;
                     pipeObject.GetComponent<Pipe>().Init(this);
                 }
@@ -146,26 +171,79 @@ public class PipeManager : MonoBehaviour
         pipeFim_go.transform.SetParent(matrizObjectsHolder.transform);
         pipeFim_go.transform.localPosition = new Vector3(gridSizeX * 100, 0);
 
+        CreateBorders();
+
         // Colocar full random
 
-        currentPipe = matriz[1,0].GetComponent<Pipe>();
+        currentPipe = matriz[1, 0].GetComponent<Pipe>();
     }
 
-    public void CallEnterWater(Pipe.PipeDirections enterDirection){
+    void CreateBorders()
+    {
+
+        for (int i = 0; i < gridSizeY; ++i)
+        {
+
+            if (new Vector3(-100, i * 100, 0) != new Vector3(-100, (gridSizeY - 1) * 100)
+                && new Vector3(-100, i * 100, 0) != new Vector3(-100, (gridSizeY - 2) * 100))
+                setBorda(bdTl_left, new Vector3(-100, i * 100, 0));
+
+            if (new Vector3(gridSizeY * 100, i * 100, 0) != new Vector3(gridSizeX * 100, 0)
+                && new Vector3(gridSizeY * 100, i * 100, 0) != new Vector3(gridSizeX * 100, 100))
+                setBorda(bdTl_right, new Vector3(gridSizeY * 100, i * 100, 0));
+        }
+
+        for (int i = 0; i < gridSizeX; ++i)
+        {
+            setBorda(bdTl_up, new Vector3(i * 100, gridSizeY * 100, 0));
+            setBorda(bdTl_down, new Vector3(i * 100, -100, 0));
+        }
+
+        var posIni = new Vector3(-100, (gridSizeY - 1) * 100);
+        setBorda(bdTl_up, posIni + new Vector3(0, 100, 0));
+        setBorda(bdTl_left_up, posIni + new Vector3(-100, 100, 0));
+        setBorda(bdTl_left, posIni + new Vector3(-100, 0, 0));
+        setBorda(bdTl_down_left, posIni + new Vector3(-100, -100, 0));
+        setBorda(bdTl_up_right_outer, posIni + new Vector3(0, -100, 0));
+        setBorda(bdTl_up_right, new Vector3((gridSizeX * 100), (gridSizeY * 100), 0));
+        setBorda(bdTl_down_left, new Vector3(-100, -100, 0));
+
+        var posFim = new Vector3(gridSizeX * 100, 0);
+        setBorda(bdTl_down, posFim + new Vector3(0, -100, 0));
+        setBorda(bdTl_right_down, posFim + new Vector3(+100, -100, 0));
+        setBorda(bdTl_right, posFim + new Vector3(+100, 0, 0));
+        setBorda(bdTl_up_right, posFim + new Vector3(+100, +100, 0));
+        setBorda(bdTl_up_outer, posFim + new Vector3(0, +100, 0));
+
+
+    }
+
+    void setBorda(Sprite sprite, Vector3 pos)
+    {
+        var borda = new GameObject().AddComponent(typeof(Image));
+        borda.GetComponent<Image>().sprite = sprite;
+        borda.transform.SetParent(matrizObjectsHolder.transform);
+        borda.transform.localPosition = pos;
+    }
+
+
+    public void CallEnterWater(Pipe.PipeDirections enterDirection)
+    {
         Vector2 nextPipe = currentPipe.transform.localPosition / 100;
-        switch(enterDirection){
+        switch (enterDirection)
+        {
             case Pipe.PipeDirections.Left:
                 nextPipe += new Vector2(1, 0);
-            break;
+                break;
             case Pipe.PipeDirections.Right:
                 nextPipe += new Vector2(-1, 0);
-            break;
+                break;
             case Pipe.PipeDirections.Down:
                 nextPipe += new Vector2(0, 1);
-            break;
+                break;
             case Pipe.PipeDirections.Up:
                 nextPipe += new Vector2(0, -1);
-            break;
+                break;
         }
 
         currentPipe = matriz[(int)nextPipe.x, (int)nextPipe.y].GetComponent<Pipe>();
@@ -173,31 +251,12 @@ public class PipeManager : MonoBehaviour
         currentPipe.GetComponent<Pipe>().EnterWater(enterDirection);
     }
 
-        //var tempGo = new GameObject().AddComponent(typeof(Image));
-        //for (int i = 0; i < gridSizeX; ++i)
-        //{
-        //    tempGo.GetComponent<Image>().sprite = ;
-        //    tempGo.transform.SetParent(matrizObjectsHolder.transform);
-        //    tempGo.transform.localPosition = new Vector3(i * 100, j * 100, 0);
-        //    Instantiate(tempGo);
 
 
-        //}
-        //for (int i = 0; i < gridSizeY; ++i)
-        //{
-        //    tempGo.GetComponent<Image>().sprite = ;
-        //    tempGo.transform.SetParent(matrizObjectsHolder.transform);
-        //    tempGo.transform.localPosition = new Vector3(i * 100, j * 100, 0);
-        //    Instantiate(tempGo);
+    // Colocar Finish
 
 
-        //}
+    // Colocar full random
 
-
-        // Colocar Finish
-
-
-        // Colocar full random
-    
 
 }
