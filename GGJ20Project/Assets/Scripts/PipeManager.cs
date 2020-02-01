@@ -16,8 +16,16 @@ public class PipeManager : MonoBehaviour
 
     public List<Vector2> randomPositions;
 
-    private void Start() {
-        
+    private Vector2 GetPositionFinish(Vector2 pos){
+        randomPositions.Remove(pos);
+        return pos;
+    }
+
+    private Vector2 GetRandomPosition(){
+        int randomIndex = (int)Random.Range(0, randomPositions.Count);
+        Vector2 pos = randomPositions[randomIndex];
+        randomPositions.Remove(pos);
+        return pos;
     }
 
     void LayOutLevel()
@@ -27,8 +35,9 @@ public class PipeManager : MonoBehaviour
         for(int i = 0; i < gridSizex; ++i){
             for (int j = 0; j < gridSizeY; ++j)
             {
-                //randomPositions.Add(Vector2(i, j));
-                // if(levelsData[0].endTile.x != i && levelsData[0].endTile.y != j)
+                randomPositions.Add(Vector2(i, j));
+
+                // Deveria estar lá embaixo
                 if(true){
                     pipeObject = Instantiate(pipePrefab);
                     pipeObject.transform.parent = this.transform;
@@ -39,9 +48,6 @@ public class PipeManager : MonoBehaviour
 
         // Colocar Finish
 
-
-
-        // COlocar peças minimas
 
         // Colocar full random
     }

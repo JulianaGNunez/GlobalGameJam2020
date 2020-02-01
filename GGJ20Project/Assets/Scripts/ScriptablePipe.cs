@@ -5,8 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PipeData", menuName = "ScriptableObjects/PipeData", order = 1)]
 public class ScriptablePipe : ScriptableObject
 {
+    public Sprite tileSprite;
     public Pipe.Rotation objectRotation = Pipe.Rotation.zero;
     public int pipeDirections;
-    public Animator animator;
-    public bool endPipe = true;
+    public bool endPipe = false;
 }
