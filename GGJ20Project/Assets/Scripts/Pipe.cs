@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class Pipe : MonoBehaviour
 {
 
     public enum PipeDirections{
+        None = 0,
         Up = (1 << 0), //1 in decimal
         Right = (1 << 1), //2 in decimal
         Down = (1 << 2), //4 in decimal
@@ -30,78 +33,99 @@ public class Pipe : MonoBehaviour
     [HideInInspector]
     public Animator animator;
 
-    public ScriptablePipe scriptablePipe;
+    public int pipeDirectionsInt;
+
+    public bool endPipe = false;
 
     PipeManager pipeManager;
 
-    private void Start() {
-        Init(scriptablePipe);
+    public void Init(PipeManager newPipeManager){ 
+        pipeManager = newPipeManager;
+        pipeDirections = (PipeDirections)pipeDirectionsInt;
     }
 
-    public void Init(ScriptablePipe scriptablePipe){ //, PipeManager newPipeManager){
-        //pipeManager = newPipeManager;
-        //transform.eulerAngles = new Vector3(transform.eulerAngles.x, (float)scriptablePipe.objectRotation, transform.eulerAngles.z);
-        pipeDirections = (PipeDirections)scriptablePipe.pipeDirections;
+    public void RotateClockwise(bool isClockwise){
+        Image fill = transform.GetChild(1).GetChild(0).GetComponent<Image>();
+        fill.fillClockwise = isClockwise;
+        if(pipeDirectionsInt == 5){
+            if(isClockwise){
+                fill.fillOrigin = (int)Image.OriginVertical.Top;
+            }
+            else{
+                fill.fillOrigin = (int)Image.OriginVertical.Bottom;
+            }
+        }
+        if(pipeDirectionsInt == 10){
+            if(isClockwise){
+                fill.fillOrigin = (int)Image.OriginHorizontal.Left;
+            }
+            else{
+                fill.fillOrigin = (int)Image.OriginHorizontal.Right;
+            }
+        }
+        fill.DOFillAmount(1, 3f).OnComplete(
+            ()=>{
+                CallNextPipe();
+            }
+        );
     }
 
     public void EnterWater(PipeDirections enterDirection){
+        bool clockwise = true;
+
+        Debug.Log("Pipes SÃO IRADAS");
+
+        if(pipeDirections == PipeDirections.None){
+            Debug.Log("Pipes não se conectam");
+        }
+
         if(filledPipe == false && pipeDirections != PipeDirections.All){
             exitDirection = (pipeDirections & enterDirection);
-            if(exitDirection == 0){
-                Debug.Log("Pipes não se conectam");
-            }
-            exitDirection = (PipeDirections)((int)pipeDirections - (int)exitDirection);
+            if(exitDirection != 0){
+                Debug.Log("Pipes se conectam");
+                
+                exitDirection = (PipeDirections)((int)pipeDirections - (int)exitDirection);
 
-            Debug.Log("Exit Direction " + (int)exitDirection + " enterDirection: " + (int)enterDirection);
-            
-            if((int)exitDirection > (int)enterDirection){
-                //Animação no "sentido horario"
-                if(!(((int)(exitDirection) + (int)enterDirection) == 9))
-                    print("hor: " + (((int)(exitDirection) + (int)enterDirection)));
-                else
-                    print("ant");
+                Debug.Log("Exit Direction " + (int)exitDirection + " enterDirection: " + (int)enterDirection);
+                
+                if((int)exitDirection > (int)enterDirection){
+                    //Animação no "sentido anti-horario"
+                    if(!(((int)(exitDirection) + (int)enterDirection) == 9))
+                        clockwise = false;
+                    else
+                        clockwise = true;
+                }
+                else{
+                    //Animação no sentido "horario"
+                    if(!(((int)(exitDirection) + (int)enterDirection) == 9))
+                        clockwise = true;
+                    else
+                        clockwise = false;
+                }
+
+                RotateClockwise(clockwise);
             }
             else{
-                if(!(((int)(exitDirection) + (int)enterDirection) == 9))
-                    print("ant: " + (((int)(exitDirection) + (int)enterDirection)));
-                else
-                    print("hor");
-                // animação no sentido "anti-horario"
+                Debug.Log("Pipes não se conectaram :(");
             }
         }
-        /*
-        else{
-            if((int)exitDirection > (int)enterDirection){
-                // Animação Esq
-            }
-            else{
-                // Animação Dir
-            }
-        }
-        */
     }
 
     // Will be called at the end of the animation
     public void CallNextPipe(){
         switch(exitDirection){
             case PipeDirections.Left:
-                //pipeManager.CallEnterWave(PipeDirections.Right);
+                pipeManager.CallEnterWater(PipeDirections.Right);
             break;
             case PipeDirections.Right:
-                //pipeManager.CallEnterWave(PipeDirections.Left);
+                pipeManager.CallEnterWater(PipeDirections.Left);
             break;
             case PipeDirections.Up:
-                //pipeManager.CallEnterWave(PipeDirections.Down);
+                pipeManager.CallEnterWater(PipeDirections.Down);
             break;
             case PipeDirections.Down:
-                //pipeManager.CallEnterWave(PipeDirections.Up);
+                pipeManager.CallEnterWater(PipeDirections.Up);
             break;
-        }
-    }
-
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.UpArrow)){
-            EnterWater(PipeDirections.Down);
         }
     }
 }

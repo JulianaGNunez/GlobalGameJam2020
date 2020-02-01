@@ -31,6 +31,8 @@ public class PipeManager : MonoBehaviour
 
     GameObject firstTileToChange;
 
+    private Pipe currentPipe = null;
+
 
     [Header("Bordas da tela")]
     public Sprite bdTl_left_up;
@@ -102,7 +104,10 @@ public class PipeManager : MonoBehaviour
                     firstTileToChange = null;
                 }
             }
+        }
 
+        if (Input.GetKeyDown("k")){
+            CallEnterWater(Pipe.PipeDirections.Down);
         }
 
     }
@@ -128,6 +133,7 @@ public class PipeManager : MonoBehaviour
                     pipeObject.transform.SetParent(matrizObjectsHolder.transform);
                     pipeObject.transform.localPosition = new Vector3(i * 100, j * 100, 0);
                     matriz[i, j] = pipeObject;
+                    pipeObject.GetComponent<Pipe>().Init(this);
                 }
             }
         }
@@ -140,6 +146,32 @@ public class PipeManager : MonoBehaviour
         pipeFim_go.transform.SetParent(matrizObjectsHolder.transform);
         pipeFim_go.transform.localPosition = new Vector3(gridSizeX * 100, 0);
 
+        // Colocar full random
+
+        currentPipe = matriz[1,0].GetComponent<Pipe>();
+    }
+
+    public void CallEnterWater(Pipe.PipeDirections enterDirection){
+        Vector2 nextPipe = currentPipe.transform.localPosition / 100;
+        switch(enterDirection){
+            case Pipe.PipeDirections.Left:
+                nextPipe += new Vector2(1, 0);
+            break;
+            case Pipe.PipeDirections.Right:
+                nextPipe += new Vector2(-1, 0);
+            break;
+            case Pipe.PipeDirections.Down:
+                nextPipe += new Vector2(0, 1);
+            break;
+            case Pipe.PipeDirections.Up:
+                nextPipe += new Vector2(0, -1);
+            break;
+        }
+
+        currentPipe = matriz[(int)nextPipe.x, (int)nextPipe.y].GetComponent<Pipe>();
+
+        currentPipe.GetComponent<Pipe>().EnterWater(enterDirection);
+    }
 
         //var tempGo = new GameObject().AddComponent(typeof(Image));
         //for (int i = 0; i < gridSizeX; ++i)
@@ -166,6 +198,6 @@ public class PipeManager : MonoBehaviour
 
 
         // Colocar full random
-    }
+    
 
 }

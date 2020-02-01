@@ -173,6 +173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6018113925897882516}
   - component: {fileID: 8857377852266655705}
+  - component: {fileID: 3268816197168798608}
   m_Layer: 5
   m_Name: pipe_vertical
   m_TagString: Untagged
@@ -210,6 +211,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8461145855438016652}
   m_CullTransparentMesh: 0
+--- !u!114 &3268816197168798608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8461145855438016652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c351cfac8d2d8b258804af9b543fc11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filledPipe: 0
+  pipeDirections: 0
+  exitDirection: 0
+  animator: {fileID: 0}
+  pipeDirectionsInt: 10
+  endPipe: 0
 --- !u!1 &8649140739193824913
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,7 +371,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
