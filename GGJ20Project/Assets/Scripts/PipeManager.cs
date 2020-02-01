@@ -24,6 +24,9 @@ public class PipeManager : MonoBehaviour
     public GameObject selectedTile_selector;
     public GameObject selectedTile_marker;
 
+    public GameObject[,] matriz;
+
+
     private Vector2 GetPositionFinish(Vector2 pos)
     {
         randomPositions.Remove(pos);
@@ -47,22 +50,25 @@ public class PipeManager : MonoBehaviour
         if (bufferInput <= bufferInput_max)
             bufferInput += Time.deltaTime;
 
-        Vector2 movement = new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
+        Vector2 movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         if (movement.sqrMagnitude > 0 && bufferInput > bufferInput_max)
         {
-            bufferInput = 0;
-            //if ((selectedTile_pos + movement).x <= gridSizeX && (selectedTile_pos + movement).y <= gridSizeY)
+            Vector2 tempCheck = (selectedTile_pos + movement);
+            //if ((tempCheck.x <= gridSizeX && tempCheck.x >= 0) && (tempCheck.y <= gridSizeY && tempCheck.y >= 0))
             //{
-                selectedTile_pos += movement * 100;
-                selectedTile_selector.transform.localPosition = selectedTile_pos;
+            bufferInput = 0;
+            selectedTile_pos += movement * 100;
+            selectedTile_selector.transform.localPosition = selectedTile_pos;
             //}
         }
-        
+
 
     }
 
     void LayOutLevel()
     {
+        matriz = new GameObject[gridSizeX, gridSizeY];
+
         int objectsLeft = gridSizeX * gridSizeY;
         GameObject pipeObject;
         for (int i = 0; i < gridSizeX; ++i)
@@ -77,6 +83,7 @@ public class PipeManager : MonoBehaviour
                     pipeObject = Instantiate(pipePrefab[Random.Range(0, pipePrefab.Length - 1)]);
                     pipeObject.transform.SetParent(this.transform);
                     pipeObject.transform.localPosition = new Vector3(i * 100, j * 100, 0);
+                    matriz[i, j] = pipeObject;
                 }
             }
         }
@@ -87,7 +94,7 @@ public class PipeManager : MonoBehaviour
         // Colocar full random
     }
 
-    void MoveTiles()
+    void ChangeTiles()
     {
 
     }
