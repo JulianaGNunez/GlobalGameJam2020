@@ -76,12 +76,23 @@ public class FPS : MonoBehaviour
             //rotate the camera of the player
             
             m_Rigid.MoveRotation(m_Rigid.rotation * Quaternion.Euler(m_rotation));
+
+            // LIXO
+
+            
         }
 
         if (m_Camera != null)
         {
             //negate this value so it rotates like a FPS not like a plane
             m_Camera.transform.Rotate(-m_cameraRotation);
+
+            Vector3 currentRotastion = transform.GetChild(0).eulerAngles;
+
+             currentRotastion.x = currentRotastion.x < -80 ? -80 : currentRotastion.x;
+
+            print(currentRotastion);
+             transform.GetChild(0).eulerAngles = currentRotastion;
         }
 
         InternalLockUpdate();
