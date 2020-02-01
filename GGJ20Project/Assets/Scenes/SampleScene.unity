@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641252, b: 0.574817, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -318,7 +318,8 @@ MonoBehaviour:
   pipeDirections: 0
   exitDirection: 0
   animator: {fileID: 0}
-  scriptablePipe: {fileID: 11400000, guid: 6bf772599404d35f7a1b2cf1fd3228ee, type: 2}
+  pipeDirectionsInt: 0
+  endPipe: 0
 --- !u!4 &279275529
 Transform:
   m_ObjectHideFlags: 0
@@ -500,8 +501,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33d93910aaa9554f0953fdc6dfb5c2a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSizeX: 10
-  gridSizeY: 10
+  gridSizeX: 6
+  gridSizeY: 6
   pipePrefab:
   - {fileID: 6311577742365452701, guid: 5fcb3559849aba843b469acb745045f4, type: 3}
   - {fileID: 616360232970337609, guid: c3937f7f11f12d74c8c78c162edb5741, type: 3}
@@ -532,8 +533,6 @@ MonoBehaviour:
   bdTl_down_left: {fileID: 9065034805346961990, guid: ad8c1d4269ca9a343bc12d152a5bf3b3,
     type: 3}
   bdTl_left: {fileID: 8845909490043265817, guid: ad8c1d4269ca9a343bc12d152a5bf3b3,
-    type: 3}
-  bdTl_middle: {fileID: -6024247848752772512, guid: ad8c1d4269ca9a343bc12d152a5bf3b3,
     type: 3}
 --- !u!224 &833913856
 RectTransform:

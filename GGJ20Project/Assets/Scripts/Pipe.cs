@@ -49,10 +49,10 @@ public class Pipe : MonoBehaviour
         fill.fillClockwise = isClockwise;
         if(pipeDirectionsInt == 5){
             if(isClockwise){
-                fill.fillOrigin = (int)Image.OriginVertical.Top;
+                fill.fillOrigin = (int)Image.OriginVertical.Bottom;
             }
             else{
-                fill.fillOrigin = (int)Image.OriginVertical.Bottom;
+                fill.fillOrigin = (int)Image.OriginVertical.Top;
             }
         }
         if(pipeDirectionsInt == 10){
@@ -83,32 +83,43 @@ public class Pipe : MonoBehaviour
             exitDirection = (pipeDirections & enterDirection);
             if(exitDirection != 0){
                 Debug.Log("Pipes se conectam");
-                
-                exitDirection = (PipeDirections)((int)pipeDirections - (int)exitDirection);
+                filledPipe = true;
 
-                Debug.Log("Exit Direction " + (int)exitDirection + " enterDirection: " + (int)enterDirection);
-                
-                if((int)exitDirection > (int)enterDirection){
-                    //Animação no "sentido anti-horario"
-                    if(!(((int)(exitDirection) + (int)enterDirection) == 9))
-                        clockwise = false;
-                    else
-                        clockwise = true;
+                if(!endPipe){
+                    // Still not won the level
+                    exitDirection = (PipeDirections)((int)pipeDirections - (int)exitDirection);
+                    Debug.Log("Exit Direction " + (int)exitDirection + " enterDirection: " + (int)enterDirection);
+                    
+                    if((int)exitDirection > (int)enterDirection){
+                        //Animação no "sentido anti-horario"
+                        if(!(((int)(exitDirection) + (int)enterDirection) == 9))
+                            clockwise = false;
+                        else
+                            clockwise = true;
+                    }
+                    else{
+                        //Animação no sentido "horario"
+                        if(!(((int)(exitDirection) + (int)enterDirection) == 9))
+                            clockwise = true;
+                        else
+                            clockwise = false;
+                    }
+
+                    RotateClockwise(clockwise);
                 }
                 else{
-                    //Animação no sentido "horario"
-                    if(!(((int)(exitDirection) + (int)enterDirection) == 9))
-                        clockwise = true;
-                    else
-                        clockwise = false;
+                    // Won the Level!
+                    WonTheLevel();
                 }
-
-                RotateClockwise(clockwise);
             }
             else{
                 Debug.Log("Pipes não se conectaram :(");
             }
         }
+    }
+
+    public void WonTheLevel(){
+        print("You won the level!");
     }
 
     // Will be called at the end of the animation

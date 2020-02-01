@@ -84,6 +84,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2781870803635383424}
   - component: {fileID: 647334079620036213}
+  - component: {fileID: 8937215265526084572}
   m_Layer: 5
   m_Name: pipe_fim
   m_TagString: Untagged
@@ -121,6 +122,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3331651775906258229}
   m_CullTransparentMesh: 0
+--- !u!114 &8937215265526084572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3331651775906258229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c351cfac8d2d8b258804af9b543fc11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filledPipe: 0
+  pipeDirections: 0
+  exitDirection: 0
+  animator: {fileID: 0}
+  pipeDirectionsInt: 8
+  endPipe: 1
 --- !u!1 &4371239173572492981
 GameObject:
   m_ObjectHideFlags: 0

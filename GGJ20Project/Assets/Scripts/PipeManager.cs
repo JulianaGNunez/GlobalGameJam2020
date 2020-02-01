@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PipeManager : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public class PipeManager : MonoBehaviour
     public GameObject[] pipePrefab;
     public GameObject pipe_inicio;
     public GameObject pipe_fim;
-    //public GameObject pipesHolder;
 
     // Public LevelData[] levelsData <- UnityAction?
 
@@ -82,7 +82,7 @@ public class PipeManager : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             var selectedGO = matriz[(int)selectedTile_selector.transform.localPosition.x / 100, (int)selectedTile_selector.transform.localPosition.y / 100];
-            if (!selectedGO.name.Contains("pipe_empty"))
+            if (!selectedGO.name.Contains("pipe_empty") && !selectedGO.GetComponent<Pipe>().filledPipe)
             {
                 if (firstTileToChange == null)
                 {
@@ -107,7 +107,13 @@ public class PipeManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown("k")){
-            CallEnterWater(Pipe.PipeDirections.Down);
+            Image fill = currentPipe.transform.GetChild(1).GetChild(0).GetComponent<Image>();
+
+            fill.DOFillAmount(1, 1.5f).OnComplete(
+                ()=>{
+                    CallEnterWater(Pipe.PipeDirections.Left);
+                }
+            );
         }
 
     }
@@ -138,17 +144,17 @@ public class PipeManager : MonoBehaviour
             }
         }
 
-        var pipeIni_go = Instantiate(pipe_inicio);
+        GameObject pipeIni_go = Instantiate(pipe_inicio);
         pipeIni_go.transform.SetParent(matrizObjectsHolder.transform);
         pipeIni_go.transform.localPosition = new Vector3(-100, (gridSizeY - 1) * 100);
 
-        var pipeFim_go = Instantiate(pipe_fim);
+        GameObject pipeFim_go = Instantiate(pipe_fim);
         pipeFim_go.transform.SetParent(matrizObjectsHolder.transform);
         pipeFim_go.transform.localPosition = new Vector3(gridSizeX * 100, 0);
 
         // Colocar full random
 
-        currentPipe = matriz[1,0].GetComponent<Pipe>();
+        currentPipe = pipeIni_go.GetComponent<Pipe>();
     }
 
     public void CallEnterWater(Pipe.PipeDirections enterDirection){
