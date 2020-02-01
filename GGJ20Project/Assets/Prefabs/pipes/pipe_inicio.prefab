@@ -68,7 +68,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0
+  m_FillAmount: 0.5
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -157,6 +157,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3035920135551554436}
   - component: {fileID: 3476560529935421289}
+  - component: {fileID: 898244601999411008}
   m_Layer: 5
   m_Name: pipe_inicio
   m_TagString: Untagged
@@ -194,6 +195,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4532155536079106683}
   m_CullTransparentMesh: 0
+--- !u!114 &898244601999411008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4532155536079106683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c351cfac8d2d8b258804af9b543fc11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filledPipe: 0
+  pipeDirections: 0
+  exitDirection: 0
+  animator: {fileID: 0}
+  pipeDirectionsInt: 2
+  endPipe: 0
 --- !u!1 &6552913981560493657
 GameObject:
   m_ObjectHideFlags: 0

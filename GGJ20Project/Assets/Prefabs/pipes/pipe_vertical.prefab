@@ -227,7 +227,7 @@ MonoBehaviour:
   pipeDirections: 0
   exitDirection: 0
   animator: {fileID: 0}
-  pipeDirectionsInt: 10
+  pipeDirectionsInt: 5
   endPipe: 0
 --- !u!1 &8649140739193824913
 GameObject:
