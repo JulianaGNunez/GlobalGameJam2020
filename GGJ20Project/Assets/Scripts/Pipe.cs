@@ -39,8 +39,6 @@ public class Pipe : MonoBehaviour
 
     PipeManager pipeManager;
 
-    bool nextUpdateCallWater = false;
-
     public void Init(PipeManager newPipeManager){ 
         pipeManager = newPipeManager;
         pipeDirections = (PipeDirections)pipeDirectionsInt;
@@ -67,9 +65,7 @@ public class Pipe : MonoBehaviour
         }
         fill.DOFillAmount(1, 3f).OnComplete(
             ()=>{
-                print("ssss-");
-                nextUpdateCallWater = true;
-                //CallNextPipe();
+                CallNextPipe();
             }
         );
     }
@@ -107,13 +103,6 @@ public class Pipe : MonoBehaviour
 
                 RotateClockwise(clockwise);
             }
-        }
-    }
-
-    private void Update() {
-        if(nextUpdateCallWater){
-            nextUpdateCallWater = false;
-            CallNextPipe();
         }
     }
 
