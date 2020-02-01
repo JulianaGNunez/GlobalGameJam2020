@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 377285275256225378}
   - component: {fileID: 6465624000017176013}
+  - component: {fileID: 2750882411354380511}
   m_Layer: 5
   m_Name: pipe_turn_right-up
   m_TagString: Untagged
@@ -47,6 +48,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109446508684265487}
   m_CullTransparentMesh: 0
+--- !u!114 &2750882411354380511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109446508684265487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c351cfac8d2d8b258804af9b543fc11c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filledPipe: 0
+  pipeDirections: 0
+  exitDirection: 0
+  animator: {fileID: 0}
+  pipeDirectionsInt: 3
+  endPipe: 0
 --- !u!1 &3445288745162235162
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +134,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 2
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 2
   m_UseSpriteMesh: 0

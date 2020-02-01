@@ -26,6 +26,8 @@ public class PipeManager : MonoBehaviour
 
     public GameObject[,] matriz;
 
+    private Pipe currentPipe = null;
+
 
     private Vector2 GetPositionFinish(Vector2 pos)
     {
@@ -62,6 +64,9 @@ public class PipeManager : MonoBehaviour
             //}
         }
 
+        if (Input.GetKeyDown("space")){
+            CallEnterWater(Pipe.PipeDirections.Down);
+        }
 
     }
 
@@ -84,6 +89,7 @@ public class PipeManager : MonoBehaviour
                     pipeObject.transform.SetParent(this.transform);
                     pipeObject.transform.localPosition = new Vector3(i * 100, j * 100, 0);
                     matriz[i, j] = pipeObject;
+                    pipeObject.GetComponent<Pipe>().Init(this);
                 }
             }
         }
@@ -92,6 +98,30 @@ public class PipeManager : MonoBehaviour
 
 
         // Colocar full random
+
+        currentPipe = matriz[1,0].GetComponent<Pipe>();
+    }
+
+    public void CallEnterWater(Pipe.PipeDirections enterDirection){
+        Vector2 nextPipe = currentPipe.transform.localPosition / 100;
+        switch(enterDirection){
+            case Pipe.PipeDirections.Left:
+                nextPipe += new Vector2(1, 0);
+            break;
+            case Pipe.PipeDirections.Right:
+                nextPipe += new Vector2(-1, 0);
+            break;
+            case Pipe.PipeDirections.Down:
+                nextPipe += new Vector2(0, 1);
+            break;
+            case Pipe.PipeDirections.Up:
+                nextPipe += new Vector2(0, -1);
+            break;
+        }
+
+        currentPipe = matriz[(int)nextPipe.x, (int)nextPipe.y].GetComponent<Pipe>();
+
+        currentPipe.GetComponent<Pipe>().EnterWater(enterDirection);
     }
 
     void ChangeTiles()
