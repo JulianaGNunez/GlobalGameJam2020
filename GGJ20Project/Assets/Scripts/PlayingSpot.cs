@@ -13,6 +13,7 @@ public class PlayingSpot : MonoBehaviour
     public GameObject sphere;
 
     Vector3 oldPos;
+    Vector3 newRot;
 
     bool isOnArcade = false;
 
@@ -41,13 +42,11 @@ public class PlayingSpot : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !inDoTween && player != null && !isOnArcade)
         {
             isOnArcade = true;
-            Debug.Log("Fuiiii!");
-            //oldPos = player.transform.GetChild(0).transform.position;
-            //print(oldPos);
-            player.transform.GetChild(0).GetComponent<FPS>().enabled = false;
-            Sequence mySequence = DOTween.Sequence();
+            
+            //print(player.transform.GetChild(0).transform.rotation);
+            //player.transform.GetChild(0).GetComponent<FPS>().enabled = false;
+            //DOTween.Sequence().Append(player.transform.GetChild(0).DOMove(transform.GetChild(0).transform.position, 0.7f));
             player.GetComponentInChildren<ModeManager>().Swap("2d");
-            mySequence.Append(player.transform.GetChild(0).DOMove(transform.GetChild(0).transform.position, 0.7f));
 
             //mySequence.Join(player.transform.DORotate(transform.GetChild(0).transform.position, 5f));
             //mySequence.Play();
@@ -57,11 +56,9 @@ public class PlayingSpot : MonoBehaviour
         {
             isOnArcade = false;
 
-            Debug.Log("Fuiiii!");
-            player.transform.GetChild(0).GetComponent<FPS>().enabled = true;
-            Sequence mySequence = DOTween.Sequence();
+            //player.transform.GetChild(0).GetComponent<FPS>().enabled = true;
+            //DOTween.Sequence().Append(player.transform.GetChild(0).DOMove(oldPos, 0.7f));
             player.GetComponentInChildren<ModeManager>().Swap("3d");
-            mySequence.Append(player.transform.GetChild(0).DOMove(oldPos, 0.7f));
             //mySequence.Join(player.transform.DORotate(transform.GetChild(0).transform.position, 5f));
             //mySequence.PlayBackwards();
         }
