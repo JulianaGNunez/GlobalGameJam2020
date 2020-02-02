@@ -26,6 +26,13 @@ public class Pipe : MonoBehaviour
         threeQuarter = 270
     }
 
+    audioControl audioclips;
+    AudioSource _audioSR;
+    private void Awake()
+    {
+        audioclips = FindObjectOfType<audioControl>();
+        _audioSR = audioclips.GetComponent<AudioSource>();
+    }
 
     [HideInInspector]
     public bool filledPipe = false;
@@ -164,14 +171,14 @@ public class Pipe : MonoBehaviour
                 AskForNextLevel();
             }
         );
-
+        _audioSR.PlayOneShot(audioclips.passaFase);
         print("You won the level!");
     }
 
     public void AskForNextLevel()
     {
         print("AskedForLevel");
-        pipeManager.DestroyAll();
+        pipeManager.LayOutLevel(false);
     }
 
     // Will be called at the end of the animation

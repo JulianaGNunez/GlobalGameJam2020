@@ -69,6 +69,15 @@ public class PipeManager : MonoBehaviour
 
     public ModeManager modeManager;
 
+    audioControl audioclips;
+    AudioSource _audioSR;
+    private void Awake()
+    {
+        audioclips = FindObjectOfType<audioControl>();
+        _audioSR = audioclips.GetComponent<AudioSource>();
+    }
+
+
 
     [HideInInspector]
     public bool canInteract = true;
@@ -85,14 +94,19 @@ public class PipeManager : MonoBehaviour
         randomPositions.Remove(pos);
         return pos;
     }
+
+
+
     private void Start()
     {
         canInteract = true;
         //LayOutLevel();
     }
 
-    private void Update(){
-        if(canInteract){
+    private void Update()
+    {
+        if (canInteract)
+        {
             UpdateInteracting();
         }
     }
@@ -111,6 +125,7 @@ public class PipeManager : MonoBehaviour
                 bufferInput = 0;
                 selectedTile_pos += movement;
                 selectedTile_selector.transform.localPosition = selectedTile_pos * 100;
+                _audioSR.PlayOneShot(audioclips.movingCursorTiles);
             }
         }
 
@@ -119,6 +134,8 @@ public class PipeManager : MonoBehaviour
             var selectedGO = matriz[(int)selectedTile_selector.transform.localPosition.x / 100, (int)selectedTile_selector.transform.localPosition.y / 100];
             if (!selectedGO.name.Contains("pipe_empty") && !selectedGO.GetComponent<Pipe>().filledPipe)
             {
+                _audioSR.PlayOneShot(audioclips.changeTiles);
+
                 if (firstTileToChange == null)
                 {
                     selectedTile_marker.transform.localPosition = selectedTile_selector.transform.localPosition;
@@ -142,10 +159,18 @@ public class PipeManager : MonoBehaviour
         }
     }
 
-    public void LayOutLevel()
+    public void LayOutLevel(bool repeatLevel = true)
     {
         DestroyAll();
 
+        if (!repeatLevel)
+        {
+            ++currentLevelIndex;
+            if (currentLevelIndex >= 1)
+                _audioSR.clip = audioclips.entrou2vezArcade;
+
+        }
+        Debug.LogError("lvl " + currentLevelIndex);
         LevelData levelData = levelDatas[currentLevelIndex];
 
         gridSizeX = levelData.levelSizeX;
@@ -328,14 +353,9 @@ public class PipeManager : MonoBehaviour
         }
     }
 
-    public void DestroyAll(bool repeatLevel = true)
+    public void DestroyAll()
     {
-        if (!repeatLevel)
-        {
-            ++currentLevelIndex;
-        }
 
-        print(transform.GetChild(0).GetChild(0));
         foreach (Transform child in transform.GetChild(0).GetChild(0))
         {
             Destroy(child.gameObject);

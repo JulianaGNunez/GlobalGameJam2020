@@ -57,8 +57,7 @@ public class PlayingSpot : MonoBehaviour
     public void zoomIn()
     {
         isOnArcade = true;
-        Debug.Log("Fuiiii!");
-        print(player.transform.GetChild(0).transform.eulerAngles);
+
         player.transform.GetChild(0).GetComponent<FPS>().enabled = false;
         player.transform.GetChild(0).GetComponent<FPS>().UnlockCursor();
         Sequence mySequence = DOTween.Sequence();
