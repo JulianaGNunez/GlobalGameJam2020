@@ -74,7 +74,7 @@ public class FPS : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && m_Animator != null )
         {
-            m_Animator.SetTrigger("active");
+            m_Animator.SetBool("active", true);
         }
 
         if (m_rotation != Vector3.zero)

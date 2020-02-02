@@ -13,6 +13,7 @@ public class PlayingSpot : MonoBehaviour
     public GameObject sphere;
 
     Vector3 oldPos;
+    Vector3 newRot;
 
     private void Awake() {
         oldPos.Set(95.8f, 41.3f, -85.5f);
@@ -34,13 +35,13 @@ public class PlayingSpot : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !inDoTween && player != null)
         {
             Debug.Log("Fuiiii!");
-            //oldPos = player.transform.GetChild(0).transform.position;
-            //print(oldPos);
+            
+            print(player.transform.GetChild(0).transform.rotation);
             player.transform.GetChild(0).GetComponent<FPS>().enabled = false;
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(player.transform.GetChild(0).DOMove(transform.GetChild(0).transform.position,  0.7f));
-            
-            //mySequence.Join(player.transform.DORotate(transform.GetChild(0).transform.position, 5f));
+            //mySequence.Append(player.transform.GetChild(0).DOMove(transform.GetChild(0).transform.rotation,  0.7f));
+            //mySequence.Join(player.transform.DORotate(newRot, 0.7f));
             //mySequence.Play();
         }
 
