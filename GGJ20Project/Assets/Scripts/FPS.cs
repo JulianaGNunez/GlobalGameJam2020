@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class FPS : MonoBehaviour
 {
-    private float speed = 5.0f;
+    private float speed = - 5.0f;
     private float m_MovX;
     private float m_MovY;
     private Vector3 m_moveHorizontal;
@@ -39,19 +39,25 @@ public class FPS : MonoBehaviour
 
         m_velocity = (m_moveHorizontal + m_movVertical).normalized * speed;
 
-        m_yRot = Input.GetAxisRaw("Mouse X");
-        m_rotation = new Vector3(0, m_yRot, 0) * m_lookSensitivity;
+       // m_yRot = Input.GetAxisRaw("Mouse X");
+        //m_rotation = new Vector3(0, m_yRot, 0) * m_lookSensitivity;
 
-        m_xRot = Input.GetAxisRaw("Mouse Y");
-        m_cameraRotation = new Vector3(m_xRot, 0, 0) * m_lookSensitivity;
+        //m_xRot = Input.GetAxisRaw("Mouse Y");
+        //m_cameraRotation = new Vector3(m_xRot, 0, 0) * m_lookSensitivity;
+
+
+       m_yRot = Mathf.Min(60, Mathf.Max(-60, m_yRot + Input.GetAxis("Mouse Y")));
+       m_xRot += Input.GetAxis("Mouse X");
+       transform.localRotation = Quaternion.Euler(0, m_xRot, 0);
+       m_Camera.transform.localRotation = Quaternion.Euler(-m_yRot, 0, 0);
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            speed = 7.5f;
+            speed = - 7.5f;
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            speed = 5.0f;
+            speed = - 5.0f;
         }
 
         if(Input.GetKeyDown(KeyCode.LeftControl)){
@@ -75,7 +81,7 @@ public class FPS : MonoBehaviour
         {
             //rotate the camera of the player
             
-            m_Rigid.MoveRotation(m_Rigid.rotation * Quaternion.Euler(m_rotation));
+            //m_Rigid.MoveRotation(m_Rigid.rotation * Quaternion.Euler(m_rotation));
 
             // LIXO
 
@@ -85,14 +91,7 @@ public class FPS : MonoBehaviour
         if (m_Camera != null)
         {
             //negate this value so it rotates like a FPS not like a plane
-            m_Camera.transform.Rotate(-m_cameraRotation);
-
-            Vector3 currentRotastion = transform.GetChild(0).eulerAngles;
-
-             currentRotastion.x = currentRotastion.x < -80 ? -80 : currentRotastion.x;
-
-            print(currentRotastion);
-             transform.GetChild(0).eulerAngles = currentRotastion;
+            //m_Camera.transform.Rotate(-m_cameraRotation);
         }
 
         InternalLockUpdate();
