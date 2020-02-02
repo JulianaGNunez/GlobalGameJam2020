@@ -122,6 +122,9 @@ public class PipeManager : MonoBehaviour
     {
         selectedTile_marker.transform.localPosition = new Vector3(-1000, -1000, 0);
 
+        selectedTile_pos = new Vector2(0, gridSizeY - 1);
+        selectedTile_selector.transform.localPosition = selectedTile_pos * 100;
+
         matriz = new GameObject[gridSizeX, gridSizeY];
 
         //Camera.main.transform.position = new Vector3(gridSizeX*100,);
