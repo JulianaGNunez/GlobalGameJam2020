@@ -470,10 +470,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b66687acaabdafa589c1cc2ca6037ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pipeEndX: 0
-  pipeEndY: 0
-  endPipe: {fileID: 0}
-  necessaryPipes: []
+  levelSizeX: 5
+  levelSizeY: 5
+  initialTimer: 20
+  finalLevel: 0
+  necessaryPipes:
+  - minAmount: 0
+    PrefabIndex: 0
 --- !u!1 &833913851
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,6 +524,9 @@ MonoBehaviour:
   selectedTile_selector: {fileID: 2011757738}
   selectedTile_marker: {fileID: 1804416334}
   matrizObjectsHolder: {fileID: 1626644990}
+  levelDatas:
+  - {fileID: 831551163}
+  - {fileID: 1180138757}
   bdTl_left_up: {fileID: 6144215635452497661, guid: ad8c1d4269ca9a343bc12d152a5bf3b3,
     type: 3}
   bdTl_up_outer: {fileID: 5035305275335927000, guid: ad8c1d4269ca9a343bc12d152a5bf3b3,
@@ -718,9 +724,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b66687acaabdafa589c1cc2ca6037ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pipeEndX: 0
-  pipeEndY: 0
-  endPipe: {fileID: 0}
+  levelSizeX: 5
+  levelSizeY: 5
+  initialTimer: 8
+  finalLevel: 0
   necessaryPipes: []
 --- !u!1 &1619622396
 GameObject:

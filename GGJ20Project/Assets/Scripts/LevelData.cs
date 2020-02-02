@@ -6,17 +6,18 @@ using UnityEngine.Events;
 public class LevelData : MonoBehaviour
 {
 
+    public int levelSizeX = 5, levelSizeY = 5;
+
+    public float initialTimer = 8f;
+
+    public bool finalLevel = false;
+
     [System.Serializable]
     public class NecessaryPipes
     {  
         public int minAmount;  
-        public ScriptablePipe scriptablePipe;
+        public int PrefabIndex;
     }
-    
-
-    public int pipeEndX, pipeEndY;
-
-    public ScriptablePipe endPipe;
 
     public NecessaryPipes[] necessaryPipes;
 }

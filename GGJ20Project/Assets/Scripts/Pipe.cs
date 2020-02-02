@@ -63,7 +63,7 @@ public class Pipe : MonoBehaviour
                 fill.fillOrigin = (int)Image.OriginHorizontal.Right;
             }
         }
-        fill.DOFillAmount(1, 3f).OnComplete(
+        fill.DOFillAmount(1, 3f).SetEase(Ease.Linear).OnComplete(
             ()=>{
                 CallNextPipe();
             }
@@ -77,6 +77,10 @@ public class Pipe : MonoBehaviour
 
         if(pipeDirections == PipeDirections.None){
             Debug.Log("Pipes não se conectam");
+        }
+
+        if(endPipe){
+            WonTheLevel();
         }
 
         if(filledPipe == false && pipeDirections != PipeDirections.All){
@@ -119,7 +123,20 @@ public class Pipe : MonoBehaviour
     }
 
     public void WonTheLevel(){
+        Image fill = transform.GetChild(1).GetChild(0).GetComponent<Image>();
+
+        fill.DOFillAmount(1, 3f).SetEase(Ease.Linear).OnComplete(
+            ()=>{
+                AskForNextLevel();
+            }
+        );
+
         print("You won the level!");
+    }
+
+    public void AskForNextLevel(){
+        print("AskedForLevel");
+        pipeManager.DestroyAll();
     }
 
     // Will be called at the end of the animation

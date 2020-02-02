@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class PipeManager : MonoBehaviour
 {
+    int currentLevelIndex = 0;
+
     public int gridSizeX, gridSizeY;
 
     int currentWaterIndexX = 0, currentWaterIndexY = 0;
@@ -31,7 +33,11 @@ public class PipeManager : MonoBehaviour
 
     GameObject firstTileToChange;
 
+    GameObject pipeFim_go;
+
     private Pipe currentPipe = null;
+
+    public LevelData[] levelDatas;
 
 
     [Header("Bordas da tela")]
@@ -107,26 +113,18 @@ public class PipeManager : MonoBehaviour
                 }
             }
         }
-
-        if (Input.GetKeyDown("k")){
-            Image fill = currentPipe.transform.GetChild(1).GetChild(0).GetComponent<Image>();
-
-            fill.DOFillAmount(1, 1.5f).OnComplete(
-                ()=>{
-                    CallEnterWater(Pipe.PipeDirections.Left);
-                }
-            );
-        }
-
     }
 
     void LayOutLevel()
     {
+        LevelData levelData = levelDatas[currentLevelIndex];
+
+        gridSizeX = levelData.levelSizeX;
+        gridSizeY = levelData.levelSizeY;
+
         selectedTile_marker.transform.localPosition = new Vector3(-1000, -1000, 0);
 
         matriz = new GameObject[gridSizeX, gridSizeY];
-
-        //Camera.main.transform.position = new Vector3(gridSizeX*100,);
 
         int objectsLeft = gridSizeX * gridSizeY;
         GameObject pipeObject;
@@ -172,15 +170,25 @@ public class PipeManager : MonoBehaviour
         pipeIni_go.transform.SetParent(matrizObjectsHolder.transform);
         pipeIni_go.transform.localPosition = new Vector3(-100, (gridSizeY - 1) * 100);
 
-        GameObject pipeFim_go = Instantiate(pipe_fim);
+        pipeFim_go = Instantiate(pipe_fim);
         pipeFim_go.transform.SetParent(matrizObjectsHolder.transform);
         pipeFim_go.transform.localPosition = new Vector3(gridSizeX * 100, 0);
+        pipeFim_go.GetComponent<Pipe>().Init(this);
 
         CreateBorders();
 
-        // Colocar full random
-
         currentPipe = pipeIni_go.GetComponent<Pipe>();
+        Image fill = currentPipe.transform.GetChild(1).GetChild(0).GetComponent<Image>();
+
+        selectedTile_selector.transform.localPosition = matriz[0, gridSizeY - 1].transform.localPosition;
+        //selectedTile_pos = selectedTile_selector.transform.localPosition * 100;
+
+        fill.DOFillAmount(1, levelData.initialTimer).SetEase(Ease.Linear).OnComplete(
+            ()=>{
+                CallEnterWater(Pipe.PipeDirections.Left);
+            }
+        );
+
     }
 
     void CreateBorders()
@@ -251,18 +259,38 @@ public class PipeManager : MonoBehaviour
                 break;
         }
 
-        if(nextPipe.x < 0 || nextPipe.x >= gridSizeX || nextPipe.y < 0 || nextPipe.y >= gridSizeY){
-            // Next tile is outside the grid
-            print("Este cano dá para fora do grid. GAME Over");
+
+        if((nextPipe.x < 0 || nextPipe.x >= gridSizeX || nextPipe.y < 0 || nextPipe.y >= gridSizeY)        ){
+            if(nextPipe.x == gridSizeX && nextPipe.y == 0){
+                //Chegou no tile final
+                currentPipe = pipeFim_go.GetComponent<Pipe>();
+                currentPipe.GetComponent<Pipe>().EnterWater(enterDirection);
+            }
+            else{
+                // Next tile is outside the grid
+                print("Este cano dá para fora do grid. GAME Over");
+            }
         }
         else{
             // Next tile is inside the grid
             currentPipe = matriz[(int)nextPipe.x, (int)nextPipe.y].GetComponent<Pipe>();
-
             currentPipe.GetComponent<Pipe>().EnterWater(enterDirection);
         }
     }
 
+    public void DestroyAll(bool repeatLevel = true){
+        if(!repeatLevel){
+            ++currentLevelIndex;
+        }
+
+        print(transform.GetChild(0).GetChild(0));
+        foreach (Transform child in transform.GetChild(0).GetChild(0))
+        {
+            Destroy(child.gameObject);
+        }
+
+        LayOutLevel();
+    }
 
 
     // Colocar Finish
