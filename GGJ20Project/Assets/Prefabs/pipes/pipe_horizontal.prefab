@@ -140,6 +140,8 @@ MonoBehaviour:
   animator: {fileID: 0}
   pipeDirectionsInt: 10
   endPipe: 0
+  particlesCollectItem: {fileID: 1363562488153419195, guid: 45e040296775df34690068924eee37a5,
+    type: 3}
 --- !u!1 &1238057938197097300
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 public class PipeManager : MonoBehaviour
 {
@@ -37,11 +38,13 @@ public class PipeManager : MonoBehaviour
 
     private Pipe currentPipe = null;
 
+    [Header("Recursos")]
     public List<GameObject> recursos = new List<GameObject>();
-    List<Vector2> recursosPositions = new List<Vector2>();
+    public List<GameObject> recursosPositions = new List<GameObject>();
     public GameObject recursosObjectsHolder;
-
-    public LevelData[] levelDatas;
+    public Text madeiras_text;
+    public Text fitas_text;
+    public Text registros_text;
 
     [Header("Bordas da tela")]
     public Sprite bdTl_left_up;
@@ -54,6 +57,13 @@ public class PipeManager : MonoBehaviour
     public Sprite bdTl_down;
     public Sprite bdTl_down_left;
     public Sprite bdTl_left;
+
+    [Header("Items")]
+    public int Madeiras = 0;
+    public int Fitas = 0;
+    public int Registros = 0;
+
+    public LevelData[] levelDatas;
 
     private Vector2 GetPositionFinish(Vector2 pos)
     {
@@ -120,6 +130,7 @@ public class PipeManager : MonoBehaviour
 
     void LayOutLevel()
     {
+
         LevelData levelData = levelDatas[currentLevelIndex];
 
         gridSizeX = levelData.levelSizeX;
@@ -179,7 +190,7 @@ public class PipeManager : MonoBehaviour
                         recGo.GetComponent<Animator>().SetFloat("Offset", Random.Range(0.0f, 1.0f));
                         recGo.transform.SetParent(recursosObjectsHolder.transform);
                         recGo.transform.localPosition = tempPos;
-                        recursosPositions.Add(tempPos);
+                        recursosPositions.Add(recGo);
                     }
                 }
             }
@@ -189,7 +200,7 @@ public class PipeManager : MonoBehaviour
         pipeIni_go.transform.SetParent(pipesObjectsHolder.transform);
         pipeIni_go.transform.localPosition = new Vector3(-100, (gridSizeY - 1) * 100);
 
-        var pipeFim_go = Instantiate(pipe_fim);
+        pipeFim_go = Instantiate(pipe_fim);
         pipeFim_go.transform.SetParent(pipesObjectsHolder.transform);
         pipeFim_go.transform.localPosition = new Vector3(gridSizeX * 100, 0);
         pipeFim_go.GetComponent<Pipe>().Init(this);
@@ -200,10 +211,10 @@ public class PipeManager : MonoBehaviour
         Image fill = currentPipe.transform.GetChild(1).GetChild(0).GetComponent<Image>();
 
         selectedTile_selector.transform.localPosition = matriz[0, gridSizeY - 1].transform.localPosition;
-        //selectedTile_pos = selectedTile_selector.transform.localPosition * 100;
 
         fill.DOFillAmount(1, levelData.initialTimer).SetEase(Ease.Linear).OnComplete(
-            ()=>{
+            () =>
+            {
                 CallEnterWater(Pipe.PipeDirections.Left);
             }
         );
@@ -279,26 +290,32 @@ public class PipeManager : MonoBehaviour
         }
 
 
-        if((nextPipe.x < 0 || nextPipe.x >= gridSizeX || nextPipe.y < 0 || nextPipe.y >= gridSizeY)        ){
-            if(nextPipe.x == gridSizeX && nextPipe.y == 0){
+        if ((nextPipe.x < 0 || nextPipe.x >= gridSizeX || nextPipe.y < 0 || nextPipe.y >= gridSizeY))
+        {
+            if (nextPipe.x == gridSizeX && nextPipe.y == 0)
+            {
                 //Chegou no tile final
                 currentPipe = pipeFim_go.GetComponent<Pipe>();
                 currentPipe.GetComponent<Pipe>().EnterWater(enterDirection);
             }
-            else{
+            else
+            {
                 // Next tile is outside the grid
                 print("Este cano dá para fora do grid. GAME Over");
             }
         }
-        else{
+        else
+        {
             // Next tile is inside the grid
             currentPipe = matriz[(int)nextPipe.x, (int)nextPipe.y].GetComponent<Pipe>();
             currentPipe.GetComponent<Pipe>().EnterWater(enterDirection);
         }
     }
 
-    public void DestroyAll(bool repeatLevel = true){
-        if(!repeatLevel){
+    public void DestroyAll(bool repeatLevel = true)
+    {
+        if (!repeatLevel)
+        {
             ++currentLevelIndex;
         }
 
@@ -309,5 +326,21 @@ public class PipeManager : MonoBehaviour
         }
 
         LayOutLevel();
+    }
+
+    public void AddMadeiras()
+    {
+        Madeiras++;
+        madeiras_text.text = "x" + Madeiras;
+    }
+    public void AddFitas()
+    {
+        Fitas++;
+        fitas_text.text = "x" + Fitas;
+    }
+    public void AddRegistros()
+    {
+        Registros++;
+        registros_text.text = "x" + Registros;
     }
 }
