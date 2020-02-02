@@ -301,7 +301,9 @@ public class PipeManager : MonoBehaviour
             else
             {
                 // Next tile is outside the grid
+                // Troca do jogo 2D para 3D
                 print("Este cano dá para fora do grid. GAME Over");
+                FindObjectOfType<Mode>().Swap("3d");
             }
         }
         else

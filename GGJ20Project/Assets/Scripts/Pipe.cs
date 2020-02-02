@@ -92,7 +92,9 @@ public class Pipe : MonoBehaviour
 
         if (pipeDirections == PipeDirections.None)
         {
+            //Troca do jogo 2D para 3D
             Debug.Log("Pipes não se conectam");
+            FindObjectOfType<Mode>().Swap("3d");
         }
 
         if (endPipe)
@@ -144,7 +146,9 @@ public class Pipe : MonoBehaviour
             }
             else
             {
-                Debug.Log("Pipes não se conectaram :(");
+                // Troca do jogo 2D para 3D
+                Debug.Log("Pipes não se conectaram");
+                FindObjectOfType<Mode>().Swap("3d");
             }
         }
     }
