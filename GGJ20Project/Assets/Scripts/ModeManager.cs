@@ -6,13 +6,11 @@ public class ModeManager : MonoBehaviour
     public PipeManager pipeManager;
     public RoomActions roomActions;
 
-    public bool canChange = true;
 
     public void Swap(string newMode)
     {
-        if (newMode == "3d" && canChange)
+        if (newMode == "3d" )
         {
-            canChange = false;
             GetComponent<FPS>().enabled = true;
             GetComponentInChildren<Camera>().fieldOfView = 60f;
 
@@ -62,9 +60,8 @@ public class ModeManager : MonoBehaviour
             pipeManager.canInteract = false;
             pipeManager.DestroyAll();
         }
-        else if (newMode == "2d" && canChange)
+        else if (newMode == "2d" )
         {
-            canChange = false;
             GetComponentInChildren<Camera>().fieldOfView = 40.9f;
             GetComponent<FPS>().enabled = false;
             DOTween.Sequence().Append(transform.DOMove(new Vector3(95.8f, 41.3f, -85.5f), 0.7f));

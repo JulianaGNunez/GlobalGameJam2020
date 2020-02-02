@@ -42,6 +42,18 @@ public class RoomActions : MonoBehaviour
             valveStream.SetActive(false);
         }
 
+        if (valve.GetComponent<interactableType>().isBroken
+            || buraco.GetComponent<interactableType>().isBroken
+            || pipeleft.GetComponent<interactableType>().isBroken
+            || pipeRight.GetComponent<interactableType>().isBroken
+            )
+        {
+            FindObjectOfType<WaterController>().isWaterRising = true;
+        }
+        else
+        {
+            FindObjectOfType<WaterController>().isWaterRising = false;
+        }
 
     }
 

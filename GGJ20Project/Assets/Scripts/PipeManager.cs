@@ -163,14 +163,6 @@ public class PipeManager : MonoBehaviour
     {
         DestroyAll();
 
-        if (!repeatLevel)
-        {
-            ++currentLevelIndex;
-            if (currentLevelIndex >= 1)
-                _audioSR.clip = audioclips.entrou2vezArcade;
-
-        }
-        Debug.LogError("lvl " + currentLevelIndex);
         LevelData levelData = levelDatas[currentLevelIndex];
 
         gridSizeX = levelData.levelSizeX;
@@ -224,7 +216,7 @@ public class PipeManager : MonoBehaviour
                     matriz[i, j] = pipeObject;
                     pipeObject.GetComponent<Pipe>().Init(this);
 
-                    if (!pipePrefabSpawn.name.Contains("empty") && Random.Range(0, 10f) >= 1f)
+                    if (!pipePrefabSpawn.name.Contains("empty") && Random.Range(0, 10f) >= 8f)
                     {
                         var recGo = Instantiate(recursos[Random.Range(0, recursos.Count)]);
                         recGo.GetComponent<Animator>().SetFloat("Offset", Random.Range(0.0f, 1.0f));
