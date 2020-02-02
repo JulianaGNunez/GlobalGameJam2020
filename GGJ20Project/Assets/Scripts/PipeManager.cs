@@ -11,8 +11,6 @@ public class PipeManager : MonoBehaviour
 
     public int gridSizeX, gridSizeY;
 
-    int currentWaterIndexX = 0, currentWaterIndexY = 0;
-
     public GameObject[] pipePrefab;
     public GameObject pipe_inicio;
     public GameObject pipe_fim;
@@ -65,6 +63,8 @@ public class PipeManager : MonoBehaviour
 
     public LevelData[] levelDatas;
 
+    [HideInInspector]
+    public bool canInteract = true;
     private Vector2 GetPositionFinish(Vector2 pos)
     {
         randomPositions.Remove(pos);
@@ -83,7 +83,13 @@ public class PipeManager : MonoBehaviour
         LayOutLevel();
     }
 
-    private void Update()
+    private void Update(){
+        if(canInteract){
+            UpdateInteracting();
+        }
+    }
+
+    private void UpdateInteracting()
     {
         if (bufferInput <= bufferInput_max)
             bufferInput += Time.deltaTime;
@@ -128,7 +134,7 @@ public class PipeManager : MonoBehaviour
         }
     }
 
-    void LayOutLevel()
+    public void LayOutLevel()
     {
 
         LevelData levelData = levelDatas[currentLevelIndex];
