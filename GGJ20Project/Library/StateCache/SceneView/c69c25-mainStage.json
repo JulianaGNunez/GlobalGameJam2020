@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":true,"pivot":{"x":1263.1796875,"y":902.4049072265625,"z":-2204.389892578125},"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"size":1442.7999267578125,"orthographic":true}
 =======
 ﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":true,"pivot":{"x":465.5569152832031,"y":665.90771484375,"z":-183.95932006835938},"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"size":1202.495361328125,"orthographic":true}
 >>>>>>> ComecoFimTest
+=======
+﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":true,"pivot":{"x":880.1904296875,"y":964.74462890625,"z":-20204.25},"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"size":1617.6644287109375,"orthographic":true}
+>>>>>>> origin/xablau

@@ -29,7 +29,7 @@ public class PipeManager : MonoBehaviour
     public GameObject selectedTile_marker;
 
     public GameObject[,] matriz;
-    public GameObject matrizObjectsHolder;
+    public GameObject pipesObjectsHolder;
 
     GameObject firstTileToChange;
 
@@ -37,8 +37,11 @@ public class PipeManager : MonoBehaviour
 
     private Pipe currentPipe = null;
 
-    public LevelData[] levelDatas;
+    public List<GameObject> recursos = new List<GameObject>();
+    List<Vector2> recursosPositions = new List<Vector2>();
+    public GameObject recursosObjectsHolder;
 
+    public LevelData[] levelDatas;
 
     [Header("Bordas da tela")]
     public Sprite bdTl_left_up;
@@ -124,6 +127,9 @@ public class PipeManager : MonoBehaviour
 
         selectedTile_marker.transform.localPosition = new Vector3(-1000, -1000, 0);
 
+        selectedTile_pos = new Vector2(0, gridSizeY - 1);
+        selectedTile_selector.transform.localPosition = selectedTile_pos * 100;
+
         matriz = new GameObject[gridSizeX, gridSizeY];
 
         int objectsLeft = gridSizeX * gridSizeY;
@@ -131,6 +137,8 @@ public class PipeManager : MonoBehaviour
 
         var posIni = new Vector3(-100, (gridSizeY - 1) * 100);
         var posFim = new Vector3(gridSizeX * 100, 0);
+
+        GameObject pipePrefabSpawn = null;
 
         for (int i = 0; i < gridSizeX; ++i)
         {
@@ -142,40 +150,51 @@ public class PipeManager : MonoBehaviour
                 if (true)
                 {
                     if ((tempPos == posIni + new Vector3(+100, 0, 0)
-                    ||  tempPos == posIni + new Vector3(+200, 0, 0)
-                    ||  tempPos == posIni + new Vector3(+100, -100, 0)
-                    ||  tempPos == posIni + new Vector3(+200, -100, 0)) 
+                    || tempPos == posIni + new Vector3(+200, 0, 0)
+                    || tempPos == posIni + new Vector3(+100, -100, 0)
+                    || tempPos == posIni + new Vector3(+200, -100, 0))
                     || (tempPos == posFim + new Vector3(-100, 0, 0)
-                    ||  tempPos == posFim + new Vector3(-200, 0, 0)
-                    ||  tempPos == posFim + new Vector3(-100, +100, 0)
-                    ||  tempPos == posFim + new Vector3(-200, +100, 0)
+                    || tempPos == posFim + new Vector3(-200, 0, 0)
+                    || tempPos == posFim + new Vector3(-100, +100, 0)
+                    || tempPos == posFim + new Vector3(-200, +100, 0)
                     )
                     )
                     {
-                        pipeObject = Instantiate(pipePrefab[Random.Range(1, pipePrefab.Length)]);
+                        pipePrefabSpawn = pipePrefab[Random.Range(1, pipePrefab.Length)];
                     }
                     else
                     {
-                        pipeObject = Instantiate(pipePrefab[Random.Range(0, pipePrefab.Length)]);
+                        pipePrefabSpawn = pipePrefab[Random.Range(0, pipePrefab.Length)];
                     }
-                    pipeObject.transform.SetParent(matrizObjectsHolder.transform);
+
+                    pipeObject = Instantiate(pipePrefabSpawn);
+                    pipeObject.transform.SetParent(pipesObjectsHolder.transform);
                     pipeObject.transform.localPosition = tempPos;
                     matriz[i, j] = pipeObject;
                     pipeObject.GetComponent<Pipe>().Init(this);
+
+                    if (!pipePrefabSpawn.name.Contains("empty") && Random.Range(0, 10f) >= 9f)
+                    {
+                        var recGo = Instantiate(recursos[Random.Range(0, recursos.Count)]);
+                        recGo.GetComponent<Animator>().SetFloat("Offset", Random.Range(0.0f, 1.0f));
+                        recGo.transform.SetParent(recursosObjectsHolder.transform);
+                        recGo.transform.localPosition = tempPos;
+                        recursosPositions.Add(tempPos);
+                    }
                 }
             }
         }
 
-        GameObject pipeIni_go = Instantiate(pipe_inicio);
-        pipeIni_go.transform.SetParent(matrizObjectsHolder.transform);
+        var pipeIni_go = Instantiate(pipe_inicio);
+        pipeIni_go.transform.SetParent(pipesObjectsHolder.transform);
         pipeIni_go.transform.localPosition = new Vector3(-100, (gridSizeY - 1) * 100);
 
-        pipeFim_go = Instantiate(pipe_fim);
-        pipeFim_go.transform.SetParent(matrizObjectsHolder.transform);
+        var pipeFim_go = Instantiate(pipe_fim);
+        pipeFim_go.transform.SetParent(pipesObjectsHolder.transform);
         pipeFim_go.transform.localPosition = new Vector3(gridSizeX * 100, 0);
         pipeFim_go.GetComponent<Pipe>().Init(this);
 
-        CreateBorders();
+        createBorders();
 
         currentPipe = pipeIni_go.GetComponent<Pipe>();
         Image fill = currentPipe.transform.GetChild(1).GetChild(0).GetComponent<Image>();
@@ -191,7 +210,7 @@ public class PipeManager : MonoBehaviour
 
     }
 
-    void CreateBorders()
+    void createBorders()
     {
 
         for (int i = 0; i < gridSizeY; ++i)
@@ -235,7 +254,7 @@ public class PipeManager : MonoBehaviour
     {
         var borda = new GameObject().AddComponent(typeof(Image));
         borda.GetComponent<Image>().sprite = sprite;
-        borda.transform.SetParent(matrizObjectsHolder.transform);
+        borda.transform.SetParent(pipesObjectsHolder.transform);
         borda.transform.localPosition = pos;
     }
 
@@ -291,12 +310,4 @@ public class PipeManager : MonoBehaviour
 
         LayOutLevel();
     }
-
-
-    // Colocar Finish
-
-
-    // Colocar full random
-
-
 }
