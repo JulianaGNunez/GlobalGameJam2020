@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -26,14 +27,21 @@ public class FPS : MonoBehaviour
     private ModeManager m_ModeManager;
 
     [Header("Recursos")]
-    public int rec_madeiras = 0;
-    public int rec_fitas = 0;
-    public int rec_registros = 0;
+     int rec_madeiras = 1;
+     int rec_fitas = 2;
+     int rec_registros = 1;
+    public TextMeshProUGUI txt_madeiras_qtd;
+    public TextMeshProUGUI txt_fitas_qtd;
+    public TextMeshProUGUI txt_registros_qtd;
+
 
     private void Start()
     {
         m_Rigid = GetComponent<Rigidbody>();
         m_ModeManager = GetComponent<ModeManager>();
+        attRecursos(rec_madeiras,"madeiras");
+        attRecursos(rec_fitas, "fitas");
+        attRecursos(rec_registros, "registros");
     }
 
     public void Update()
@@ -59,30 +67,30 @@ public class FPS : MonoBehaviour
         transform.localRotation = Quaternion.Euler(0, m_xRot, 0);
         m_Camera.transform.localRotation = Quaternion.Euler(-m_yRot, 0, 0);
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            speed = -7.5f;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            speed = -5.0f;
-        }
+        //if (Input.GetKeyDown(KeyCode.LeftShift))
+        //{
+        //    speed = -7.5f;
+        //}
+        //if (Input.GetKeyUp(KeyCode.LeftShift))
+        //{
+        //    speed = -5.0f;
+        //}
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            m_Camera.fieldOfView = 53.0f;
-        }
+        //if (Input.GetKeyDown(KeyCode.LeftControl))
+        //{
+        //    m_Camera.fieldOfView = 53.0f;
+        //}
 
-        if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            m_Camera.fieldOfView = 69.0f;
-        }
+        //if (Input.GetKeyUp(KeyCode.LeftControl))
+        //{
+        //    m_Camera.fieldOfView = 69.0f;
+        //}
         if (m_velocity != Vector3.zero)
         {
             m_Rigid.MovePosition(m_Rigid.position + m_velocity * Time.fixedDeltaTime);
         }
 
-        if (Input.GetMouseButtonDown(0) && m_Animator != null)
+        if (Input.GetButtonDown("Jump") && m_Animator != null)
         {
             m_Animator.SetBool("active", true);
         }
@@ -107,14 +115,14 @@ public class FPS : MonoBehaviour
     //controls the locking and unlocking of the mouse
     private void InternalLockUpdate()
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            m_cursorIsLocked = false;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            m_cursorIsLocked = true;
-        }
+        //if (Input.GetKeyUp(KeyCode.Escape))
+        //{
+        //    m_cursorIsLocked = false;
+        //}
+        //else if (Input.GetButtonDown("Jump"))
+        //{
+        //    m_cursorIsLocked = true;
+        //}
 
         if (m_cursorIsLocked)
         {
@@ -131,19 +139,50 @@ public class FPS : MonoBehaviour
     {
         if (other.gameObject.CompareTag("interactable"))
         {
-            m_Animator = other.gameObject.GetComponent<Animator>();
+            var interactable = other.gameObject.GetComponent<interactableType>();
+            switch (interactable.tipo)
+            {
+                case interactableType.interacType.pipes:
+                    if (rec_fitas > 0 && interactable.isBroken)
+                    {
+                        interactable.isBroken = false;
+                        attRecursos(--rec_fitas, "fitas");
+                        m_Animator = other.gameObject.GetComponent<Animator>();
+                    }
+                    break;
+                case interactableType.interacType.wall:
+                    if (rec_madeiras > 0 && interactable.isBroken)
+                    {
+                        interactable.isBroken = false;
+                        attRecursos(--rec_madeiras, "madeiras");
+                        m_Animator = other.gameObject.GetComponent<Animator>();
+                    }
+                    break;
+                case interactableType.interacType.valve:
+                    if (rec_registros > 0 && interactable.isBroken)
+                    {
+                        interactable.isBroken = false;
+                        attRecursos(--rec_registros, "registros");
+                        m_Animator = other.gameObject.GetComponent<Animator>();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         if (other.gameObject.CompareTag("collectable"))
         {
             if (other.gameObject.name.Contains("madeira"))
             {
-                rec_madeiras++;
-            } else if (other.gameObject.name.Contains("fita"))
+                attRecursos(++rec_madeiras, "madeiras");
+            }
+            else if (other.gameObject.name.Contains("fita"))
             {
-                rec_fitas++;
-            } else if (other.gameObject.name.Contains("registro"))
+                attRecursos(++rec_fitas, "fitas");
+            }
+            else if (other.gameObject.name.Contains("registro"))
             {
-                rec_registros++;
+                attRecursos(++rec_registros, "registros");
             }
             Destroy(other.gameObject);
         }
@@ -152,16 +191,38 @@ public class FPS : MonoBehaviour
     {
         m_Animator = null;
     }
-    private void UnlockCursor()
+    public void UnlockCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    private void LockCursor()
+    public void LockCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+
+    void attRecursos(int newValue, string type)
+    {
+        switch (type)
+        {
+            case "madeiras":
+                rec_madeiras = newValue;
+                txt_madeiras_qtd.text = "<size=50%>x<size=100%>" + rec_madeiras;
+                break;
+            case "fitas":
+                rec_fitas = newValue;
+                txt_fitas_qtd.text = "<size=50%>x<size=100%>" + rec_fitas;
+                break;
+            case "registros":
+                rec_registros = newValue;
+                txt_registros_qtd.text = "<size=50%>x<size=100%>" + rec_registros;
+                break;
+            default:
+                break;
+        }
+    }
+
 
 }

@@ -8,11 +8,11 @@ public class RoomActions : MonoBehaviour
     public GameObject Stream;
     public GameObject valveStream;
 
-    public GameObject pipeSteamLeft,pipeSteamRight;
+    public GameObject pipeSteamLeft, pipeSteamRight;
 
-    public GameObject buraco, valve,valve1;
+    public GameObject buraco, valve, valve1;
 
-    public GameObject madeira,madeira2, pipeleft, pipeRight;
+    public GameObject madeira, madeira2, pipeleft, pipeRight;
 
     private IEnumerator coroutine;
     // Start is called before the first frame update
@@ -23,7 +23,8 @@ public class RoomActions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R)){
+        if (Input.GetKeyDown(KeyCode.R))
+        {
             print("eu estou aqui");
             BreakValvePipe();
             BreakWall();
@@ -31,30 +32,33 @@ public class RoomActions : MonoBehaviour
             BreakPipeRight();
 
         }
-        if(madeira2.activeSelf)
+        if (madeira2.activeSelf)
         {
             Stream.SetActive(false);
         }
 
-        if(valve1.activeSelf){
+        if (valve1.activeSelf)
+        {
             valveStream.SetActive(false);
         }
 
-        
+
     }
 
-     IEnumerator WaitAndForSplash(GameObject go)
-     {
+    IEnumerator WaitAndForSplash(GameObject go)
+    {
         yield return new WaitForSeconds(1);
         go.SetActive(true);
-     }
+    }
 
-   public void BreakValvePipe(){
+    public void BreakValvePipe()
+    {
         valveStream.SetActive(true);
         valve1.SetActive(false);
         valve.GetComponent<Animator>().SetBool("active", false);
         coroutine = WaitAndForSplash(valveStream);
         StartCoroutine(coroutine);
+        valve.GetComponent<interactableType>().isBroken = true;
 
     }
 
@@ -67,15 +71,20 @@ public class RoomActions : MonoBehaviour
         buraco.GetComponent<Animator>().SetBool("active", false);
         coroutine = WaitAndForSplash(Stream);
         StartCoroutine(coroutine);
+        buraco.GetComponent<interactableType>().isBroken = true;
     }
 
-    public void BreakPipeLeft(){
+    public void BreakPipeLeft()
+    {
         pipeSteamLeft.SetActive(true);
         pipeleft.GetComponent<Animator>().SetBool("active", false);
+        pipeleft.GetComponent<interactableType>().isBroken = true;
     }
 
-    public void BreakPipeRight(){
+    public void BreakPipeRight()
+    {
         pipeSteamRight.SetActive(true);
         pipeRight.GetComponent<Animator>().SetBool("active", false);
+        pipeRight.GetComponent<interactableType>().isBroken = true;
     }
 }

@@ -5,62 +5,79 @@ using DG.Tweening;
 
 public class PlayingSpot : MonoBehaviour
 {
-
-    bool inDoTween = false;
-
-    GameObject player = null;
-
-    public GameObject sphere;
+    public GameObject player = null;
 
     Vector3 oldPos;
-    Vector3 newRot;
 
     bool isOnArcade = false;
+    public Camera m_Camera;
 
     private void Awake()
     {
-        oldPos.Set(95.8f, 41.3f, -85.5f);
+        oldPos.Set(0.01f, 1f, 0f);
     }
-    private void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        print("Enguiei");
-        if (other.gameObject.CompareTag("Player"))
+        zoomIn();
+    }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Player"))
+    //        player = other.transform.parent.gameObject;
+    //}
+    private void OnTriggerStay(Collider other)
+    {
+        if (Input.GetButtonDown("Jump") && player != null && !isOnArcade)
         {
-            print("Salvei");
-            player = other.transform.parent.gameObject;
+            zoomIn();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        print("Nullers");
-        player = null;
+        isOnArcade = false;
+        //player = null;
     }
 
-    private void Update()
+    //private void Update()
+    //{
+    //    if (Input.GetButtonDown("Jump") && !inDoTween && player != null && !isOnArcade)
+    //    {
+    //        zoomIn();
+    //    }
+
+    //    //if (Input.GetButtonDown("Jump") && !inDoTween && player != null)
+    //    //{
+    //    //    zoomOut();
+    //    //}
+
+    //}
+
+    public void zoomIn()
     {
-        if (Input.GetMouseButtonDown(0) && !inDoTween && player != null && !isOnArcade)
-        {
-            isOnArcade = true;
-            
-            //print(player.transform.GetChild(0).transform.rotation);
-            //player.transform.GetChild(0).GetComponent<FPS>().enabled = false;
-            //DOTween.Sequence().Append(player.transform.GetChild(0).DOMove(transform.GetChild(0).transform.position, 0.7f));
-            player.GetComponentInChildren<ModeManager>().Swap("2d");
+        isOnArcade = true;
+        Debug.Log("Fuiiii!");
+        print(player.transform.GetChild(0).transform.eulerAngles);
+        player.transform.GetChild(0).GetComponent<FPS>().enabled = false;
+        player.transform.GetChild(0).GetComponent<FPS>().UnlockCursor();
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(player.transform.GetChild(0).GetChild(0).DOMove(transform.GetChild(0).transform.position, 0.7f));
+        //mySequence.Append(player.transform.GetChild(0).DOMove(transform.GetChild(0).transform.rotation,  0.7f));
+        mySequence.Join((player.transform.GetChild(0).GetChild(0).DORotate(transform.GetChild(0).transform.eulerAngles, 0.7f)));
+        //mySequence.Play();
+        player.GetComponentInChildren<ModeManager>().Swap("2d");
 
-            //mySequence.Join(player.transform.DORotate(transform.GetChild(0).transform.position, 5f));
-            //mySequence.Play();
-        }
+    }
+    public void zoomOut()
+    {
+        isOnArcade = false;
 
-        if (Input.GetMouseButtonDown(1) && !inDoTween && player != null)
-        {
-            isOnArcade = false;
+        Debug.Log("Fuiiii!");
+        player.transform.GetChild(0).GetComponent<FPS>().enabled = true;
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(player.transform.GetChild(0).GetChild(0).DOLocalMove(oldPos, 0.7f));
 
-            //player.transform.GetChild(0).GetComponent<FPS>().enabled = true;
-            //DOTween.Sequence().Append(player.transform.GetChild(0).DOMove(oldPos, 0.7f));
-            player.GetComponentInChildren<ModeManager>().Swap("3d");
-            //mySequence.Join(player.transform.DORotate(transform.GetChild(0).transform.position, 5f));
-            //mySequence.PlayBackwards();
-        }
+        player.GetComponentInChildren<ModeManager>().Swap("3d");
     }
 }

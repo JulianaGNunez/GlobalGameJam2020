@@ -71,7 +71,7 @@ public class PipeManager : MonoBehaviour
 
 
     [HideInInspector]
-    public bool canInteract = false;
+    public bool canInteract = true;
     private Vector2 GetPositionFinish(Vector2 pos)
     {
         randomPositions.Remove(pos);
@@ -87,7 +87,7 @@ public class PipeManager : MonoBehaviour
     }
     private void Start()
     {
-        canInteract = false;
+        canInteract = true;
         //LayOutLevel();
     }
 

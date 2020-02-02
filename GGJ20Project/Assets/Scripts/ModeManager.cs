@@ -11,9 +11,10 @@ public class ModeManager : MonoBehaviour
         if (newMode == "3d")
         {
             GetComponent<FPS>().enabled = true;
+            GetComponentInChildren<Camera>().fieldOfView = 60f;
 
             //Call "animation" to go 3d
-            //fPS.enable = true; <- Talvez fique no OnComplete() da animação
+            //fPS.enable = true; <- Talvez fique no OnComplete() da animação`
             //Send objects collected to spawn at the machine:
             for (int i = 0; i < pipeManager.Fitas; i++)
                 Instantiate(pipeManager.recursos3D[0], pipeManager.positionToSpawn.position + new Vector3(Random.Range(0, 2f), 0, 0), Quaternion.identity);
@@ -60,6 +61,7 @@ public class ModeManager : MonoBehaviour
         }
         else if (newMode == "2d")
         {
+            GetComponentInChildren<Camera>().fieldOfView = 40.9f;
             GetComponent<FPS>().enabled = false;
             DOTween.Sequence().Append(transform.DOMove(new Vector3(95.8f, 41.3f, -85.5f), 0.7f));
             //Call "animation" to go 2d -- Arcade
