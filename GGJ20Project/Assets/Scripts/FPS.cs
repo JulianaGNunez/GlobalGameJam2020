@@ -81,11 +81,7 @@ public class FPS : MonoBehaviour
         {
             //rotate the camera of the player
             
-            //m_Rigid.MoveRotation(m_Rigid.rotation * Quaternion.Euler(m_rotation));
-
-            // LIXO
-
-            
+            //m_Rigid.MoveRotation(m_Rigid.rotation * Quaternion.Euler(m_rotation));            
         }
 
         if (m_Camera != null)

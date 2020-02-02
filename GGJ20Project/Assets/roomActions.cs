@@ -24,7 +24,6 @@ public class roomActions : MonoBehaviour
         {
             Stream.SetActive(false);
         }
-        
     }
 
     void BreakValvePipe(){
@@ -37,6 +36,4 @@ public class roomActions : MonoBehaviour
         Stream.SetActive(true);
         Destroy(fakeWall);
     }
-
-
 }
