@@ -88,8 +88,6 @@ public class Pipe : MonoBehaviour
     {
         bool clockwise = true;
 
-        Debug.Log("Pipes SÃO IRADAS");
-
         if (pipeDirections == PipeDirections.None)
         {
             //Troca do jogo 2D para 3D
@@ -112,6 +110,8 @@ public class Pipe : MonoBehaviour
                 checkItemToCollect();
 
                 filledPipe = true;
+
+                UpdateExpression();
 
                 if (!endPipe)
                 {
@@ -151,6 +151,32 @@ public class Pipe : MonoBehaviour
                 pipeManager.DestroyAll();
                 pipeManager.modeManager.Swap("3d");
             }
+        }
+    }
+    
+    private void UpdateExpression(){
+        Vector2 pipePos = transform.localPosition / 100;
+
+        if(pipeManager.currentLevelIndex < 2){
+            pipeManager.ChangeExpression(1);
+        }
+        else{
+            pipeManager.ChangeExpression(2);
+        }
+        
+        // Next to Sticatto
+        if(pipePos.x <= 1 && pipePos.y < pipeManager.gridSizeY - 2 && pipePos.y > 0){
+            if(pipeManager.currentLevelIndex < 2){
+                pipeManager.ChangeExpression(2);
+            }
+            else{
+                pipeManager.ChangeExpression(3);
+            }
+        }
+
+        // Next to ending
+        if((pipePos.x >= pipeManager.gridSizeX - 3 && pipePos.y <= 1) || endPipe){
+            pipeManager.ChangeExpression(0);
         }
     }
 

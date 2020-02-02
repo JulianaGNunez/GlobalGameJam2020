@@ -7,17 +7,14 @@ using System.Linq;
 
 public class PipeManager : MonoBehaviour
 {
-    int currentLevelIndex = 0;
+    [HideInInspector]
+    public int currentLevelIndex = 0;
 
     public int gridSizeX, gridSizeY;
 
     public GameObject[] pipePrefab;
     public GameObject pipe_inicio;
     public GameObject pipe_fim;
-
-    // Public LevelData[] levelsData <- UnityAction?
-
-    public List<Vector2> randomPositions;
 
     float bufferInput = 0;
     float bufferInput_max = 0.2f;
@@ -69,22 +66,14 @@ public class PipeManager : MonoBehaviour
 
     public ModeManager modeManager;
 
+    public Image face;
+
+    public Sprite[] faceExpressions;
+
 
     [HideInInspector]
     public bool canInteract = false;
-    private Vector2 GetPositionFinish(Vector2 pos)
-    {
-        randomPositions.Remove(pos);
-        return pos;
-    }
 
-    private Vector2 GetRandomPosition()
-    {
-        int randomIndex = (int)Random.Range(0, randomPositions.Count);
-        Vector2 pos = randomPositions[randomIndex];
-        randomPositions.Remove(pos);
-        return pos;
-    }
     private void Start()
     {
         canInteract = false;
@@ -142,9 +131,42 @@ public class PipeManager : MonoBehaviour
         }
     }
 
+    private GameObject FinalLevelLayout(int i, int j, Vector3 posIni, Vector3 posFim){
+        var tempPos = new Vector3(i * 100, j * 100, 0);
+
+        if((tempPos == posFim + new Vector3(-100, 0, 0)
+        || tempPos == posFim + new Vector3(-200, 0, 0)
+        || tempPos == posFim + new Vector3(-100, +100, 0)
+        || tempPos == posFim + new Vector3(-200, +100, 0))){
+            return pipePrefab[1];
+        }
+
+
+        if ((tempPos == posIni + new Vector3(+100, 0, 0)
+        || tempPos == posIni + new Vector3(+200, 0, 0)
+        || tempPos == posIni + new Vector3(+100, -100, 0)
+        || tempPos == posIni + new Vector3(+200, -100, 0))
+        || tempPos.x <= (posIni + new Vector3(+100, 0, 0)).x
+        )
+        {
+            return pipePrefab[Random.Range(1, pipePrefab.Length)];
+        }
+
+        return pipePrefab[Random.Range(0, pipePrefab.Length)];
+    }
+
     public void LayOutLevel()
     {
         DestroyAll();
+
+        face.enabled = true;
+
+        if(currentLevelIndex < 2){
+            ChangeExpression(1);
+        }
+        else{
+            ChangeExpression(2);
+        }
 
         LevelData levelData = levelDatas[currentLevelIndex];
 
@@ -165,16 +187,12 @@ public class PipeManager : MonoBehaviour
         var posFim = new Vector3(gridSizeX * 100, 0);
 
         GameObject pipePrefabSpawn = null;
-
         for (int i = 0; i < gridSizeX; ++i)
         {
             for (int j = 0; j < gridSizeY; ++j)
             {
-                randomPositions.Add(new Vector2(i, j));
                 var tempPos = new Vector3(i * 100, j * 100, 0);
-                // Deveria estar lá embaixo
-                if (true)
-                {
+                if(!levelData.finalLevel){
                     if ((tempPos == posIni + new Vector3(+100, 0, 0)
                     || tempPos == posIni + new Vector3(+200, 0, 0)
                     || tempPos == posIni + new Vector3(+100, -100, 0)
@@ -192,21 +210,24 @@ public class PipeManager : MonoBehaviour
                     {
                         pipePrefabSpawn = pipePrefab[Random.Range(0, pipePrefab.Length)];
                     }
+                }
+                else{
+                    FinalLevelLayout(i, j, posIni, posFim);
+                }
 
-                    pipeObject = Instantiate(pipePrefabSpawn);
-                    pipeObject.transform.SetParent(pipesObjectsHolder.transform);
-                    pipeObject.transform.localPosition = tempPos;
-                    matriz[i, j] = pipeObject;
-                    pipeObject.GetComponent<Pipe>().Init(this);
+                pipeObject = Instantiate(pipePrefabSpawn);
+                pipeObject.transform.SetParent(pipesObjectsHolder.transform);
+                pipeObject.transform.localPosition = tempPos;
+                matriz[i, j] = pipeObject;
+                pipeObject.GetComponent<Pipe>().Init(this);
 
-                    if (!pipePrefabSpawn.name.Contains("empty") && Random.Range(0, 10f) >= 1f)
-                    {
-                        var recGo = Instantiate(recursos[Random.Range(0, recursos.Count)]);
-                        recGo.GetComponent<Animator>().SetFloat("Offset", Random.Range(0.0f, 1.0f));
-                        recGo.transform.SetParent(recursosObjectsHolder.transform);
-                        recGo.transform.localPosition = tempPos;
-                        recursosPositions.Add(recGo);
-                    }
+                if (!pipePrefabSpawn.name.Contains("empty") && Random.Range(0, 10f) >= 1f)
+                {
+                    var recGo = Instantiate(recursos[Random.Range(0, recursos.Count)]);
+                    recGo.GetComponent<Animator>().SetFloat("Offset", Random.Range(0.0f, 1.0f));
+                    recGo.transform.SetParent(recursosObjectsHolder.transform);
+                    recGo.transform.localPosition = tempPos;
+                    recursosPositions.Add(recGo);
                 }
             }
         }
@@ -238,7 +259,6 @@ public class PipeManager : MonoBehaviour
 
     void createBorders()
     {
-
         for (int i = 0; i < gridSizeY; ++i)
         {
 
@@ -335,6 +355,8 @@ public class PipeManager : MonoBehaviour
             ++currentLevelIndex;
         }
 
+        face.enabled = false;
+
         print(transform.GetChild(0).GetChild(0));
         foreach (Transform child in transform.GetChild(0).GetChild(0))
         {
@@ -350,6 +372,10 @@ public class PipeManager : MonoBehaviour
         selectedTile_selector.transform.localPosition = new Vector3(-1000, -1000, 0);
 
         //LayOutLevel();
+    }
+
+    public void ChangeExpression(int spriteIndex){
+        face.sprite = faceExpressions[spriteIndex];
     }
 
     public void AddMadeiras()
