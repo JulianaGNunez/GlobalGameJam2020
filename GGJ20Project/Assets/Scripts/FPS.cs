@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class FPS : MonoBehaviour
 {
-    private float speed = - 5.0f;
+    private float speed = -5.0f;
     private float m_MovX;
     private float m_MovY;
     private Vector3 m_moveHorizontal;
@@ -23,9 +23,17 @@ public class FPS : MonoBehaviour
 
     private Animator m_Animator;
 
+    private ModeManager m_ModeManager;
+
+    [Header("Recursos")]
+    public int rec_madeiras = 0;
+    public int rec_fitas = 0;
+    public int rec_registros = 0;
+
     private void Start()
     {
         m_Rigid = GetComponent<Rigidbody>();
+        m_ModeManager = GetComponent<ModeManager>();
     }
 
     public void Update()
@@ -34,37 +42,39 @@ public class FPS : MonoBehaviour
         m_MovX = Input.GetAxis("Horizontal");
         m_MovY = Input.GetAxis("Vertical");
 
-        m_moveHorizontal = transform.right * - m_MovX;
-        m_movVertical = transform.forward * - m_MovY;
+        m_moveHorizontal = transform.right * -m_MovX;
+        m_movVertical = transform.forward * -m_MovY;
 
         m_velocity = (m_moveHorizontal + m_movVertical).normalized * speed;
 
-       // m_yRot = Input.GetAxisRaw("Mouse X");
+        // m_yRot = Input.GetAxisRaw("Mouse X");
         //m_rotation = new Vector3(0, m_yRot, 0) * m_lookSensitivity;
 
         //m_xRot = Input.GetAxisRaw("Mouse Y");
         //m_cameraRotation = new Vector3(m_xRot, 0, 0) * m_lookSensitivity;
 
 
-       m_yRot = Mathf.Min(60, Mathf.Max(-60, m_yRot + Input.GetAxis("Mouse Y")));
-       m_xRot += Input.GetAxis("Mouse X");
-       transform.localRotation = Quaternion.Euler(0, m_xRot, 0);
-       m_Camera.transform.localRotation = Quaternion.Euler(-m_yRot, 0, 0);
+        m_yRot = Mathf.Min(60, Mathf.Max(-60, m_yRot + Input.GetAxis("Mouse Y")));
+        m_xRot += Input.GetAxis("Mouse X");
+        transform.localRotation = Quaternion.Euler(0, m_xRot, 0);
+        m_Camera.transform.localRotation = Quaternion.Euler(-m_yRot, 0, 0);
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            speed = - 7.5f;
+            speed = -7.5f;
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            speed = - 5.0f;
+            speed = -5.0f;
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftControl)){
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
             m_Camera.fieldOfView = 53.0f;
         }
 
-        if(Input.GetKeyUp(KeyCode.LeftControl)){
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
             m_Camera.fieldOfView = 69.0f;
         }
         if (m_velocity != Vector3.zero)
@@ -72,7 +82,7 @@ public class FPS : MonoBehaviour
             m_Rigid.MovePosition(m_Rigid.position + m_velocity * Time.fixedDeltaTime);
         }
 
-        if (Input.GetMouseButtonDown(0) && m_Animator != null )
+        if (Input.GetMouseButtonDown(0) && m_Animator != null)
         {
             m_Animator.SetTrigger("active");
         }
@@ -80,7 +90,7 @@ public class FPS : MonoBehaviour
         if (m_rotation != Vector3.zero)
         {
             //rotate the camera of the player
-            
+
             //m_Rigid.MoveRotation(m_Rigid.rotation * Quaternion.Euler(m_rotation));            
         }
 
@@ -117,12 +127,29 @@ public class FPS : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.CompareTag("interactable")) {
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("interactable"))
+        {
             m_Animator = other.gameObject.GetComponent<Animator>();
         }
+        if (other.gameObject.CompareTag("collectable"))
+        {
+            if (other.gameObject.name.Contains("madeira"))
+            {
+                rec_madeiras++;
+            } else if (other.gameObject.name.Contains("fita"))
+            {
+                rec_fitas++;
+            } else if (other.gameObject.name.Contains("registro"))
+            {
+                rec_registros++;
+            }
+            Destroy(other.gameObject);
+        }
     }
-    private void OnTriggerExit(Collider other) {
+    private void OnTriggerExit(Collider other)
+    {
         m_Animator = null;
     }
     private void UnlockCursor()

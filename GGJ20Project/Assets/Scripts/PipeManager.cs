@@ -44,6 +44,10 @@ public class PipeManager : MonoBehaviour
     public Text fitas_text;
     public Text registros_text;
 
+    [Header("Recursos 3D")]
+    public List<GameObject> recursos3D = new List<GameObject>();
+    public Transform positionToSpawn;
+
     [Header("Bordas da tela")]
     public Sprite bdTl_left_up;
     public Sprite bdTl_up_outer;
@@ -63,8 +67,11 @@ public class PipeManager : MonoBehaviour
 
     public LevelData[] levelDatas;
 
+    public ModeManager modeManager;
+
+
     [HideInInspector]
-    public bool canInteract = true;
+    public bool canInteract = false;
     private Vector2 GetPositionFinish(Vector2 pos)
     {
         randomPositions.Remove(pos);
@@ -80,7 +87,8 @@ public class PipeManager : MonoBehaviour
     }
     private void Start()
     {
-        LayOutLevel();
+        canInteract = false;
+        //LayOutLevel();
     }
 
     private void Update(){
@@ -136,6 +144,7 @@ public class PipeManager : MonoBehaviour
 
     public void LayOutLevel()
     {
+        DestroyAll();
 
         LevelData levelData = levelDatas[currentLevelIndex];
 
@@ -190,7 +199,7 @@ public class PipeManager : MonoBehaviour
                     matriz[i, j] = pipeObject;
                     pipeObject.GetComponent<Pipe>().Init(this);
 
-                    if (!pipePrefabSpawn.name.Contains("empty") && Random.Range(0, 10f) >= 9f)
+                    if (!pipePrefabSpawn.name.Contains("empty") && Random.Range(0, 10f) >= 1f)
                     {
                         var recGo = Instantiate(recursos[Random.Range(0, recursos.Count)]);
                         recGo.GetComponent<Animator>().SetFloat("Offset", Random.Range(0.0f, 1.0f));
@@ -275,7 +284,6 @@ public class PipeManager : MonoBehaviour
         borda.transform.localPosition = pos;
     }
 
-
     public void CallEnterWater(Pipe.PipeDirections enterDirection)
     {
         Vector2 nextPipe = currentPipe.transform.localPosition / 100;
@@ -309,7 +317,7 @@ public class PipeManager : MonoBehaviour
                 // Next tile is outside the grid
                 // Troca do jogo 2D para 3D
                 print("Este cano dá para fora do grid. GAME Over");
-                FindObjectOfType<Mode>().Swap("3d");
+                modeManager.Swap("3d");
             }
         }
         else
@@ -332,8 +340,16 @@ public class PipeManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        foreach (Transform child in transform.GetChild(0).GetChild(1))
+        {
+            Destroy(child.gameObject);
+        }
+        recursosPositions.Clear();
 
-        LayOutLevel();
+        selectedTile_marker.transform.localPosition = new Vector3(-1000, -1000, 0);
+        selectedTile_selector.transform.localPosition = new Vector3(-1000, -1000, 0);
+
+        //LayOutLevel();
     }
 
     public void AddMadeiras()

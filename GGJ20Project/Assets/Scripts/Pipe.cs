@@ -94,7 +94,7 @@ public class Pipe : MonoBehaviour
         {
             //Troca do jogo 2D para 3D
             Debug.Log("Pipes não se conectam");
-            FindObjectOfType<Mode>().Swap("3d");
+            pipeManager.modeManager.Swap("3d");
         }
 
         if (endPipe)
@@ -148,7 +148,8 @@ public class Pipe : MonoBehaviour
             {
                 // Troca do jogo 2D para 3D
                 Debug.Log("Pipes não se conectaram");
-                FindObjectOfType<Mode>().Swap("3d");
+                pipeManager.DestroyAll();
+                pipeManager.modeManager.Swap("3d");
             }
         }
     }
@@ -196,7 +197,7 @@ public class Pipe : MonoBehaviour
     void checkItemToCollect()
     {
         // Collect an item if it is in the way
-        if (pipeManager.recursosPositions.Any(x => x.transform.localPosition == new Vector3((int)transform.localPosition.x , (int)transform.localPosition.y)))
+        if (pipeManager.recursosPositions.Any(x => x.transform.localPosition == new Vector3((int)transform.localPosition.x, (int)transform.localPosition.y)))
         {
             var item = pipeManager.recursosPositions.Find(x => x.transform.localPosition == new Vector3((int)transform.localPosition.x, (int)transform.localPosition.y));
             pipeManager.recursosPositions.Remove(item);
